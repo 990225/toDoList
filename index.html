@@ -5,7 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="Hyunjong KIM" />
     <title>To Do List</title>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+      integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="./style.css" />
+    <script src="./main.js"></script>
   </head>
-  <body></body>
+  <body>
+    <article id="toDo">
+      <h1 class="toDo__title">To Do List</h1>
+
+      <form>
+        <input class="toDo__input" type="text" />
+        <button class="toDo__input__btn">
+          <i class="fas fa-plus-square"></i>
+        </button>
+        <select class="toDo__select">
+          <option value="all">All</option>
+          <option value="completed">Completed</option>
+          <option value="uncompleted">Uncompleted</option>
+        </select>
+      </form>
+
+      <ul class="toDo__output"></ul>
+    </article>
+  </body>
 </html>
