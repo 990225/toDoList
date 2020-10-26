@@ -36,6 +36,20 @@ toDoInputBtn.addEventListener("click", (e) => {
 
     toDoNewEditBtn.className = "toDo__output__item__btn-edit";
     toDoNewEditBtn.innerHTML = "<i class='fas fa-pen-square'></i>";
+    toDoNewEditBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      if (toDoNewEditBtn.classList[1] === undefined) {
+        toDoNewCompleteBtn.classList.toggle("complete");
+
+        if (toDoNewInput.getAttribute("disabled") === "disabled") {
+          toDoNewInput.removeAttribute("disabled", "disabled");
+          toDoNewInput.focus();
+        } else {
+          toDoNewInput.setAttribute("disabled", "disabled");
+        }
+      }
+    });
 
     toDoNewCompleteBtn.className = "toDo__output__item__btn-complete";
     toDoNewCompleteBtn.innerHTML = "<i class='fas fa-check-square'></i>";
