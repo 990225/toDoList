@@ -56,8 +56,10 @@ toDoInputBtn.addEventListener("click", (e) => {
     toDoNewCompleteBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      toDoNewInput.classList.toggle("complete");
-      toDoNewEditBtn.classList.toggle("complete");
+      if (toDoNewCompleteBtn.classList[1] === undefined) {
+        toDoNewInput.classList.toggle("complete");
+        toDoNewEditBtn.classList.toggle("complete");
+      }
     });
 
     toDoNewRemoveBtn.className = "toDo__output__item__btn-remove";
