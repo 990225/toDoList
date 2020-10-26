@@ -89,6 +89,11 @@ button {
   background-color: transparent;
 }
 
+.complete {
+  text-decoration-line: line-through;
+  opacity: 0.5;
+}
+
 .toDo__output__item__btn {
   display: flex;
   margin-top: 2px;
