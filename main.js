@@ -48,5 +48,10 @@ toDoInputBtn.addEventListener("click", (e) => {
 
     toDoNewRemoveBtn.className = "toDo__output__item__btn-remove";
     toDoNewRemoveBtn.innerHTML = "<i class='fas fa-minus-square'></i>";
+    toDoNewRemoveBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      toDoNewForm.remove();
+    });
   }
 });
