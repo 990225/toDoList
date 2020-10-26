@@ -23,7 +23,7 @@ toDoInputBtn.addEventListener("click", (e) => {
 
     toDoNewInput.className = "toDo__output__item";
     toDoNewInput.setAttribute("type", "text");
-    toDoNewInput.setAttribute("disabled", "true");
+    toDoNewInput.setAttribute("disabled", "disabled");
     toDoNewInput.value = toDoInputItem.value;
 
     toDoInputItem.value = "";
@@ -39,6 +39,12 @@ toDoInputBtn.addEventListener("click", (e) => {
 
     toDoNewCompleteBtn.className = "toDo__output__item__btn-complete";
     toDoNewCompleteBtn.innerHTML = "<i class='fas fa-check-square'></i>";
+    toDoNewCompleteBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      toDoNewInput.classList.toggle("complete");
+      toDoNewEditBtn.classList.toggle("complete");
+    });
 
     toDoNewRemoveBtn.className = "toDo__output__item__btn-remove";
     toDoNewRemoveBtn.innerHTML = "<i class='fas fa-minus-square'></i>";
