@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "NanumBarunpen";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumBarunpen.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body,
 h1,
@@ -14,6 +22,7 @@ html {
 }
 
 body {
+  font-family: "NanumBarunpen", sans-serif;
   background-color: #5cab7d;
   user-select: none;
 }
@@ -52,7 +61,8 @@ button {
 }
 
 .toDo__input__item {
-  font-size: 2.4em;
+  font-family: "NanumBarunpen", sans-serif;
+  font-size: 2.4rem;
   border-radius: 4px 0 0 4px;
 }
 
@@ -84,6 +94,7 @@ button {
 }
 
 .toDo__output__item {
+  font-family: "NanumBarunpen", sans-serif;
   font-size: 2.2rem;
   color: #000000;
   background-color: transparent;
