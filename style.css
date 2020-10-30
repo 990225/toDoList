@@ -73,8 +73,8 @@ button {
   background-color: #ffffff;
 }
 
-.fa-plus-square {
-  margin-right: 1px;
+.toDo__input__btn i {
+  margin-right: 3px;
   font-size: 2.4rem;
   color: #5cab7d;
 }
@@ -85,6 +85,7 @@ button {
 
 .toDo__output__container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin-top: 0.6rem;
 }
@@ -108,11 +109,9 @@ button {
 
 .toDo__output__item__btn {
   display: flex;
-  margin-top: 2px;
 }
 
-.toDo__output__item__btn button {
-  width: 3.2rem;
-  height: 3.2rem;
+.toDo__output__item__btn button i {
+  padding: 0.6rem;
   font-size: 2.4rem;
 }
