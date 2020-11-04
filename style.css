@@ -94,11 +94,20 @@ button {
   margin-top: 0;
 }
 
+.drag {
+  background-color: #00000022;
+}
+
+.hint {
+  background-color: #ffffff22;
+}
+
 .toDo__output__item {
   font-family: "NanumBarunpen", sans-serif;
   font-size: 2.2rem;
   color: #000000;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .complete {

@@ -1,5 +1,7 @@
 "use strict";
 
+let toDoArray = [];
+
 window.addEventListener("load", () => {
   const loadToDoItem = localStorage.getItem("toDoItem");
 
@@ -12,8 +14,6 @@ window.addEventListener("load", () => {
 });
 
 const toDoInputBtn = document.querySelector(".toDo__input__btn");
-
-let toDoArray = [];
 
 toDoInputBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -33,7 +33,8 @@ toDoInputBtn.addEventListener("click", (e) => {
     toDoInputItem.focus();
 
     toDoArray.push(toDoObj);
-    localStorage.setItem("toDoItem", JSON.stringify(toDoArray));
+
+    saveToDoItem();
   }
 });
 
@@ -50,12 +51,62 @@ function addToDoItem(id, text, check) {
 
   toDoNewForm.className = "toDo__output__container";
   toDoNewForm.id = id;
+  toDoNewForm.setAttribute("draggable", "true");
   toDoNewForm.appendChild(toDoNewInput);
   toDoNewForm.appendChild(toDoNewDiv);
   toDoNewForm.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
     }
+  });
+  toDoNewForm.addEventListener("dragstart", () => {
+    toDoNewForm.classList.add("drag");
+
+    toDoOutput.childNodes.forEach((toDoForm) => {
+      if (toDoForm !== toDoNewForm) {
+        toDoForm.classList.add("hint");
+      }
+    });
+  });
+  toDoNewForm.addEventListener("dragend", () => {
+    toDoNewForm.classList.remove("drag");
+
+    toDoOutput.childNodes.forEach((toDoForm) => {
+      if (toDoForm !== toDoNewForm) {
+        toDoForm.classList.remove("hint");
+      }
+    });
+  });
+  toDoNewForm.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+  toDoNewForm.addEventListener("drop", () => {
+    const dragItem = document.querySelector(".drag");
+
+    let dragPos = 0,
+      dropPos = 0;
+
+    toDoOutput.childNodes.forEach((toDoForm) => {
+      if (toDoForm === dragItem) {
+        dragPos = toDoForm.id;
+      } else if (toDoForm === toDoNewForm) {
+        dropPos = toDoForm.id;
+      }
+    });
+
+    if (dragPos < dropPos) {
+      toDoOutput.insertBefore(dragItem, toDoNewForm.nextSibling);
+    } else {
+      toDoOutput.insertBefore(dragItem, toDoNewForm);
+    }
+
+    const dragItemSlice = toDoArray.splice(dragItem.id, 1);
+
+    toDoArray.splice(toDoNewForm.id, 0, dragItemSlice[0]);
+
+    sortToDoItemID();
+
+    saveToDoItem();
   });
 
   toDoNewInput.className = "toDo__output__item";
@@ -73,21 +124,20 @@ function addToDoItem(id, text, check) {
   toDoNewEditBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
-    if (toDoNewEditBtn.classList[1] === undefined) {
+    if (!toDoNewEditBtn.classList[1]) {
       toDoNewCompleteBtn.classList.toggle("complete");
 
       if (toDoNewInput.getAttribute("disabled") === "disabled") {
+        toDoNewForm.setAttribute("draggable", "false");
         toDoNewInput.removeAttribute("disabled", "disabled");
         toDoNewInput.focus();
       } else {
-        const toDoFormId =
-          e.target.parentElement.parentElement.parentElement.id;
-
+        toDoNewForm.setAttribute("draggable", "true");
         toDoNewInput.setAttribute("disabled", "disabled");
 
-        toDoArray[toDoFormId].text = toDoNewInput.value;
+        toDoArray[toDoNewForm.id].text = toDoNewInput.value;
 
-        localStorage.setItem("toDoItem", JSON.stringify(toDoArray));
+        saveToDoItem();
       }
     }
   });
@@ -97,19 +147,17 @@ function addToDoItem(id, text, check) {
   toDoNewCompleteBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
-    if (toDoNewCompleteBtn.classList[1] === undefined) {
+    if (!toDoNewCompleteBtn.classList[1]) {
       toDoNewInput.classList.toggle("complete");
       toDoNewEditBtn.classList.toggle("complete");
 
-      const toDoFormId = e.target.parentElement.parentElement.parentElement.id;
-
-      if (toDoArray[toDoFormId].check === 0) {
-        toDoArray[toDoFormId].check = 1;
+      if (toDoArray[toDoNewForm.id].check === 0) {
+        toDoArray[toDoNewForm.id].check = 1;
       } else {
-        toDoArray[toDoFormId].check = 0;
+        toDoArray[toDoNewForm.id].check = 0;
       }
 
-      localStorage.setItem("toDoItem", JSON.stringify(toDoArray));
+      saveToDoItem();
     }
   });
 
@@ -118,28 +166,34 @@ function addToDoItem(id, text, check) {
   toDoNewRemoveBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
-    for (let i = 0; i < toDoArray.length; i++) {
-      const toDoFormId = e.target.parentElement.parentElement.parentElement.id;
-
-      if (parseInt(toDoFormId) === i) {
+    toDoOutput.childNodes.forEach((toDoForm) => {
+      if (toDoForm.id === toDoNewForm.id) {
         toDoNewForm.remove();
 
-        const toDoForm = document.querySelectorAll(".toDo__output__container");
+        toDoArray.splice(toDoNewForm.id, 1);
 
-        toDoArray.splice(i, 1);
+        sortToDoItemID();
 
-        for (let j = 0; j < toDoArray.length; j++) {
-          toDoArray[j].id = j;
-          toDoForm[j].id = j;
-        }
-
-        localStorage.setItem("toDoItem", JSON.stringify(toDoArray));
+        saveToDoItem();
       }
-    }
+    });
   });
 
   if (check === 1) {
     toDoNewInput.classList.add("complete");
     toDoNewEditBtn.classList.add("complete");
+  }
+}
+
+function saveToDoItem() {
+  localStorage.setItem("toDoItem", JSON.stringify(toDoArray));
+}
+
+function sortToDoItemID() {
+  const toDoForm = document.querySelectorAll(".toDo__output__container");
+
+  for (let i = 0, max = toDoArray.length; i < max; i++) {
+    toDoForm[i].id = i;
+    toDoArray[i].id = i;
   }
 }
