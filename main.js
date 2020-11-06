@@ -15,8 +15,8 @@ window.addEventListener("load", () => {
 
 const toDoInputBtn = document.querySelector(".toDo__input__btn");
 
-toDoInputBtn.addEventListener("click", (e) => {
-  e.preventDefault();
+toDoInputBtn.addEventListener("click", (ev) => {
+  ev.preventDefault();
 
   const toDoInputItem = document.querySelector(".toDo__input__item");
 
@@ -54,9 +54,9 @@ function addToDoItem(id, text, check) {
   toDoNewForm.setAttribute("draggable", "true");
   toDoNewForm.appendChild(toDoNewInput);
   toDoNewForm.appendChild(toDoNewDiv);
-  toDoNewForm.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
+  toDoNewForm.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter") {
+      ev.preventDefault();
     }
   });
   toDoNewForm.addEventListener("dragstart", () => {
@@ -77,36 +77,61 @@ function addToDoItem(id, text, check) {
       }
     });
   });
-  toDoNewForm.addEventListener("dragover", (e) => {
-    e.preventDefault();
+  toDoNewForm.addEventListener("dragover", (ev) => {
+    ev.preventDefault();
   });
   toDoNewForm.addEventListener("drop", () => {
-    const dragItem = document.querySelector(".drag");
-
-    let dragPos = 0,
-      dropPos = 0;
+    dropToDoItem(toDoOutput, toDoNewForm);
+  });
+  toDoNewForm.addEventListener("touchstart", () => {
+    toDoNewForm.classList.add("drag");
 
     toDoOutput.childNodes.forEach((toDoForm) => {
-      if (toDoForm === dragItem) {
-        dragPos = toDoForm.id;
-      } else if (toDoForm === toDoNewForm) {
-        dropPos = toDoForm.id;
+      if (toDoForm !== toDoNewForm) {
+        toDoForm.classList.add("hint");
+      }
+    });
+  });
+  toDoNewForm.addEventListener("touchend", (ev) => {
+    const dropItem = document.elementFromPoint(
+      ev.changedTouches[0].clientX,
+      ev.changedTouches[0].clientY
+    );
+
+    let dropTarget = "";
+
+    if (dropItem.className === "toDo__output__item") {
+      dropTarget = dropItem.parentElement;
+    } else if (
+      dropItem.className === "fas fa-pen-square" ||
+      dropItem.className === "fas fa-check-square" ||
+      dropItem.className === "fas fa-minus-square"
+    ) {
+      dropTarget = dropItem.parentElement.parentElement.parentElement;
+    } else {
+      dropTarget = "";
+    }
+
+    if (dropTarget) {
+      dropToDoItem(toDoOutput, dropTarget);
+    }
+
+    toDoNewForm.classList.remove("drag");
+
+    toDoOutput.childNodes.forEach((toDoForm) => {
+      if (toDoForm !== toDoNewForm) {
+        toDoForm.classList.remove("hint");
       }
     });
 
-    if (dragPos < dropPos) {
-      toDoOutput.insertBefore(dragItem, toDoNewForm.nextSibling);
-    } else {
-      toDoOutput.insertBefore(dragItem, toDoNewForm);
-    }
+    toDoNewForm.style.position = "";
+  });
+  toDoNewForm.addEventListener("touchmove", (ev) => {
+    const touchLocation = ev.changedTouches[0];
 
-    const dragItemSlice = toDoArray.splice(dragItem.id, 1);
-
-    toDoArray.splice(toDoNewForm.id, 0, dragItemSlice[0]);
-
-    sortToDoItemID();
-
-    saveToDoItem();
+    toDoNewForm.style.position = "absolute";
+    toDoNewForm.style.top = `${touchLocation.clientY}px`;
+    toDoNewForm.style.left = `${touchLocation.clientX}px`;
   });
 
   toDoNewInput.className = "toDo__output__item";
@@ -121,8 +146,8 @@ function addToDoItem(id, text, check) {
 
   toDoNewEditBtn.className = "toDo__output__item__btn-edit";
   toDoNewEditBtn.innerHTML = "<i class='fas fa-pen-square'></i>";
-  toDoNewEditBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+  toDoNewEditBtn.addEventListener("click", (ev) => {
+    ev.preventDefault();
 
     if (!toDoNewEditBtn.classList[1]) {
       toDoNewCompleteBtn.classList.toggle("complete");
@@ -144,8 +169,8 @@ function addToDoItem(id, text, check) {
 
   toDoNewCompleteBtn.className = "toDo__output__item__btn-complete";
   toDoNewCompleteBtn.innerHTML = "<i class='fas fa-check-square'></i>";
-  toDoNewCompleteBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+  toDoNewCompleteBtn.addEventListener("click", (ev) => {
+    ev.preventDefault();
 
     if (!toDoNewCompleteBtn.classList[1]) {
       toDoNewInput.classList.toggle("complete");
@@ -163,8 +188,8 @@ function addToDoItem(id, text, check) {
 
   toDoNewRemoveBtn.className = "toDo__output__item__btn-remove";
   toDoNewRemoveBtn.innerHTML = "<i class='fas fa-minus-square'></i>";
-  toDoNewRemoveBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+  toDoNewRemoveBtn.addEventListener("click", (ev) => {
+    ev.preventDefault();
 
     toDoOutput.childNodes.forEach((toDoForm) => {
       if (toDoForm.id === toDoNewForm.id) {
@@ -196,4 +221,33 @@ function sortToDoItemID() {
     toDoForm[i].id = i;
     toDoArray[i].id = i;
   }
+}
+
+function dropToDoItem(toDoOutput, dropTarget) {
+  const dragItem = document.querySelector(".drag");
+
+  let dragPos = 0,
+    dropPos = 0;
+
+  toDoOutput.childNodes.forEach((toDoForm) => {
+    if (toDoForm === dragItem) {
+      dragPos = toDoForm.id;
+    } else if (toDoForm === dropTarget) {
+      dropPos = toDoForm.id;
+    }
+  });
+
+  if (dragPos < dropPos) {
+    toDoOutput.insertBefore(dragItem, dropTarget.nextSibling);
+  } else {
+    toDoOutput.insertBefore(dragItem, dropTarget);
+  }
+
+  const dragItemSlice = toDoArray.splice(dragItem.id, 1);
+
+  toDoArray.splice(dropTarget.id, 0, dragItemSlice[0]);
+
+  sortToDoItemID();
+
+  saveToDoItem();
 }
