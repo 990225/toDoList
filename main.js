@@ -125,13 +125,20 @@ function addToDoItem(id, text, check) {
     });
 
     toDoNewForm.style.position = "";
+    toDoNewForm.style.top = "";
+    toDoNewForm.style.left = "";
+    toDoNewForm.style.width = "";
   });
   toDoNewForm.addEventListener("touchmove", (ev) => {
-    const touchLocation = ev.changedTouches[0];
+    const toDoInput = document.querySelector(".toDo__input"),
+      touchLocation = ev.changedTouches[0];
 
     toDoNewForm.style.position = "absolute";
-    toDoNewForm.style.top = `${touchLocation.clientY}px`;
-    toDoNewForm.style.left = `${touchLocation.clientX}px`;
+    toDoNewForm.style.top = `${touchLocation.clientY - 16}px`;
+    toDoNewForm.style.left = `${
+      (window.innerWidth - toDoInput.clientWidth) / 2
+    }px`;
+    toDoNewForm.style.width = `${toDoInput.clientWidth}px`;
   });
 
   toDoNewInput.className = "toDo__output__item";
