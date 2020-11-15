@@ -132,13 +132,13 @@ function addToDoItem(id, text, check) {
   toDoNewForm.addEventListener("touchmove", (ev) => {
     const toDoInput = document.querySelector(".toDo__input"),
       touchLocation = ev.changedTouches[0];
-
+    console.log(touchLocation);
     toDoNewForm.style.position = "absolute";
-    toDoNewForm.style.top = `${touchLocation.clientY - 16}px`;
+    toDoNewForm.style.top = `${touchLocation.pageY - 140}px`;
     toDoNewForm.style.left = `${
-      (window.innerWidth - toDoInput.clientWidth) / 2
+      (window.innerWidth - toDoInput.clientWidth + 10) / 2
     }px`;
-    toDoNewForm.style.width = `${toDoInput.clientWidth}px`;
+    toDoNewForm.style.width = `${toDoInput.clientWidth - 40}px`;
   });
 
   toDoNewInput.className = "toDo__output__item";
